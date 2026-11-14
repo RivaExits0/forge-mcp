@@ -1,0 +1,4 @@
+name = "example_game"
+version = "1.0"
+author = "forge-mcp"
+description = "Example game profile template"

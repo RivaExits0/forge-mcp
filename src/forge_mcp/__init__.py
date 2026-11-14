@@ -1,0 +1,1 @@
+"""Forge-Mcp: MCP server for game modding helpers."""
