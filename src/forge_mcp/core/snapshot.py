@@ -9,7 +9,7 @@ import shutil
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import ensure_dir, copy_file, read_file, write_file, sha256_file
+from forge_mcp.core.platform_utils import ensure_dir, copy_file, read_file, write_file, sha256_file
 
 
 def _snap_dir(ws_dir: str) -> str:

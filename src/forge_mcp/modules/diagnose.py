@@ -6,7 +6,7 @@ import os
 import re
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import read_file
+from forge_mcp.core.platform_utils import read_file
 
 
 def parse_crash_log(path: str) -> Dict[str, Any]:

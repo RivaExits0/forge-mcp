@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import read_file, write_file, ensure_dir
+from forge_mcp.core.platform_utils import read_file, write_file, ensure_dir
 
 
 def unity_assets(path: str, action: str = "list", entry: Optional[str] = None,

@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import (
+from forge_mcp.core.platform_utils import (
     safe_relpath as _safe_relpath,
     ensure_dir,
     copy_file,

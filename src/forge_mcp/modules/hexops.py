@@ -5,7 +5,7 @@ from __future__ import annotations
 import struct
 from typing import Any, Dict, List, Optional, Tuple
 
-from forge_mcp.core.platform import read_file
+from forge_mcp.core.platform_utils import read_file
 
 
 def hex_view(data: bytes, offset: int = 0, limit: int = 256) -> str:

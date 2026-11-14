@@ -6,7 +6,7 @@ import os
 from typing import Any, Dict, List, Optional
 
 from forge_mcp.core.external import find_executable, run_tool
-from forge_mcp.core.platform import ensure_dir
+from forge_mcp.core.platform_utils import ensure_dir
 
 
 def unreal_pak(pak_path: str, action: str = "list", out_dir: Optional[str] = None,

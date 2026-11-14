@@ -9,7 +9,7 @@ import struct
 import zlib
 from typing import Any, Dict, List, Optional, Tuple
 
-from forge_mcp.core.platform import read_file, write_file, ensure_dir
+from forge_mcp.core.platform_utils import read_file, write_file, ensure_dir
 
 
 def entropy_map(data: bytes, block_size: int = 256) -> List[Dict[str, Any]]:

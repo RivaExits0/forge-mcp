@@ -2,7 +2,23 @@
 name = "forge-mcp"
 version = "0.1.0"
 description = "MCP server for game modding helpers (hex, offsets, PE, APK, Unity/Unreal, tables, archives)."
+readme = "README.md"
 requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "RivaExits0" }]
+keywords = ["mcp", "model-context-protocol", "game-modding", "reverse-engineering", "hex-editor", "pe-analysis", "apk", "unity", "unreal"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Security",
+    "Topic :: Utilities",
+]
 dependencies = [
     "mcp>=1.0.0",
     "pefile>=2024.0.0",
@@ -21,9 +37,15 @@ full = [
     "androguard>=4.0.0",
     "lz4>=4.3.0",
 ]
+dev = ["pytest"]
 
 [project.scripts]
 forge-mcp = "forge_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/RivaExits0/forge-mcp"
+Issues = "https://github.com/RivaExits0/forge-mcp/issues"
+Repository = "https://github.com/RivaExits0/forge-mcp"
 
 [build-system]
 requires = ["setuptools>=61"]

@@ -8,7 +8,7 @@ import zipfile
 from typing import Any, Dict, List, Optional
 
 from forge_mcp.core.external import find_executable, run_tool
-from forge_mcp.core.platform import ensure_dir
+from forge_mcp.core.platform_utils import ensure_dir
 
 
 def unpack_archive(archive_path: str, out_dir: str, password: Optional[str] = None) -> Dict[str, Any]:

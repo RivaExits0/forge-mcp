@@ -8,7 +8,7 @@ import zipfile
 from typing import Any, Dict, List, Optional
 
 from forge_mcp.core.external import find_executable, run_tool, get_apktool_jar, run_jar
-from forge_mcp.core.platform import read_file, ensure_dir, IS_WINDOWS
+from forge_mcp.core.platform_utils import read_file, ensure_dir, IS_WINDOWS
 
 
 def apk_unpack(apk_path: str, out_dir: str, framework: Optional[str] = None) -> Dict[str, Any]:
@@ -172,7 +172,7 @@ def smali_patch(src_dir: str, file_rel: str, old: str, new: str, dry_run: bool =
     if dry_run:
         return {"dry_run": True, "matches": count, "preview": content.replace(old, new, 1)[:2000]}
     new_content = content.replace(old, new)
-    from forge_mcp.core.platform import write_file
+    from forge_mcp.core.platform_utils import write_file
     write_file(p, new_content)
     return {"dry_run": False, "matches": count, "written": p}
 
@@ -207,7 +207,7 @@ def resource_extract(apk_path: str, out_dir: str, pattern: Optional[str] = None)
         target = os.path.join(out_dir, info.filename)
         ensure_dir(os.path.dirname(target))
         with z.open(info) as src:
-            from forge_mcp.core.platform import write_file
+            from forge_mcp.core.platform_utils import write_file
             write_file(target, src.read(), binary=True)
         extracted.append(info.filename)
     return {"count": len(extracted), "files": extracted[:200]}

@@ -49,12 +49,12 @@ def _get_ws(name: Optional[str] = None):
 
 
 def _read_bytes(path: str) -> bytes:
-    from forge_mcp.core.platform import read_file
+    from forge_mcp.core.platform_utils import read_file
     return read_file(path, binary=True)
 
 
 def _write_bytes(path: str, data: bytes) -> None:
-    from forge_mcp.core.platform import write_file
+    from forge_mcp.core.platform_utils import write_file
     write_file(path, data, binary=True)
 
 

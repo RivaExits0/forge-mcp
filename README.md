@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-orange)](https://modelcontextprotocol.io/)
-[![Tests](https://img.shields.io/badge/tests-23%20passing-brightgreen)]()
+[![CI](https://github.com/RivaExits0/forge-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/RivaExits0/forge-mcp/actions/workflows/ci.yml)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)]()
 
 > **MCP (Model Context Protocol) server for game modding helpers.**
@@ -88,7 +88,7 @@ All tools use a **module/action** pattern with built-in **pagination** (`offset`
 
 | Tool | Purpose | Example |
 |------|---------|---------|
-| `open_game` | Create/open per-game workspace; import file (exe/apk/save) | `{"game_name": "elden_ring", "source_path": "/games/ER/eldenring.exe"}` |
+| `open_game` | Create/open per-game workspace; import file (exe/apk/save) | `{"game_name": "example_game", "source_path": "/games/example_game/example.exe"}` |
 | `inspect` | Read-only queries (pe_info, hex_view, apk_manifest, entropy_map…) | `{"module": "pe", "action": "pe_info", "params": {}}` |
 | `search` | Searches (hex_search, diff_files, value_scan, find_function, guess_fields) | `{"module": "hex", "action": "hex_search", "params": {"query": "48 8B ?? ?? ?? 90", "mode": "aob"}}` |
 | `edit` | Write ops with `dry_run` (hex_patch, smali_patch, table edit, checksum_fix) | `{"module": "hex", "action": "hex_patch", "params": {"offset": 0x1234, "bytes_hex": "90 90", "dry_run": false}}` |
@@ -103,10 +103,10 @@ All tools use a **module/action** pattern with built-in **pagination** (`offset`
 
 ## 📖 Example Workflow
 
-> **User:** *"Open Elden Ring, find the gold value (I had 100 then 150), and give me a signature that survives updates."*
+> **User:** *"Open Example Game, find the gold value (I had 100 then 150), and give me a signature that survives updates."*
 
 ```text
-1. open_game({"game_name": "elden_ring", "source_path": "C:/Games/ER/eldenring.exe"})
+1. open_game({"game_name": "example_game", "source_path": "/games/example_game/example.exe"})
 
 2. search({"module": "hex", "action": "value_scan",
           "params": {"before_path": "save_100.bin", "after_path": "save_150.bin",
@@ -114,18 +114,18 @@ All tools use a **module/action** pattern with built-in **pagination** (`offset`
    → hits: [{"offset": 0x3A20, "before": 100, "after": 150, "type": "int32"}, ...]
 
 3. inspect({"module": "hex", "action": "hex_view",
-            "params": {"path": "work/eldenring.exe", "offset": 0x3A10, "limit": 32}})
+            "params": {"path": "work/example.exe", "offset": 0x3A10, "limit": 32}})
 
 4. patch_code({"module": "pe", "action": "make_signature",
-               "params": {"path": "work/eldenring.exe", "address": 0x3A20, "length": 32}})
+               "params": {"path": "work/example.exe", "address": 0x3A20, "length": 32}})
    → {"signature": "8B 45 ?? 3D 96 00 00 00 75 ?? 48 8B 0D ...", "unique": true}
 
 5. validate({"module": "pe", "action": "verify_signature",
-             "params": {"path": "work/eldenring_v1.02.exe", "signature": "..."}})
+             "params": {"path": "work/example_v1.02.exe", "signature": "..."}})
    → {"matches": 1, "unique": true}  # survives the patch!
 
 6. export({"module": "patch", "action": "export_patch",
-           "params": {"original_path": "original/eldenring.exe", "modified_path": "work/eldenring.exe",
+           "params": {"original_path": "original/example.exe", "modified_path": "work/example.exe",
                       "out_path": "gold_patch.ips", "fmt": "ips"}})
 ```
 
@@ -137,14 +137,14 @@ Drop a folder under `profiles/<game>/`:
 
 ```
 profiles/
-  elden_ring/
+  example_game/
     profile.toml        # metadata + config
     schema.ksy          # Kaitai struct for save/table files
     signatures.json     # known AOBs { "gold_offset": "8B 45 ?? ..." }
 ```
 
 ```python
-open_game({"game_name": "elden_ring", "profile_dir": "profiles/elden_ring"})
+open_game({"game_name": "example_game", "profile_dir": "profiles/example_game"})
 ```
 
 Community adapters are **just folders — no code needed**.
@@ -161,12 +161,15 @@ description = "Example game profile template"
 
 ## 🛡 Safety & Ethics
 
-- ✅ **Never writes to originals** — workspace keeps a read-only copy + working copy
-- ✅ **Snapshots before every write** — `undo` restores byte-for-byte (SHA-256 verified)
-- ✅ **No binary execution** — static analysis only; Unicorn emulation is fully isolated (no syscalls, no FS, no network)
-- ✅ **Frida only when explicitly asked** — script generation + run hint; you run it on your own machine
-- ✅ **Path traversal blocked** — all paths resolved inside workspace root
-- ✅ **Single-player / owned copies only** — no anti-cheat bypass, no DRM removal, no multiplayer advantage tools
+This tool is designed for **single-player modding of games you own**. The following principles are enforced by design:
+
+- **Only your own copies** — Works exclusively with game files you legally own and have local access to.
+- **Single-player only** — No support for online/multiplayer games, anti-cheat bypass, or DRM removal.
+- **Read-only originals** — The workspace keeps original files read-only; all edits happen on working copies.
+- **Automatic snapshots** — Every write operation creates a snapshot first; `undo` restores byte-for-byte (SHA-256 verified).
+- **No binary execution** — Static analysis only; Unicorn emulation is fully isolated (no syscalls, no filesystem, no network).
+- **Frida on demand** — Frida scripts are generated for you to run manually on your own machine; the server never executes them.
+- **Path traversal blocked** — All paths are resolved inside the workspace root; escape attempts are rejected.
 
 ---
 
@@ -177,7 +180,7 @@ forge-mcp/
 ├── src/forge_mcp/
 │   ├── server.py           # FastMCP entry, 10 tools (module/action dispatch)
 │   ├── core/
-│   │   ├── platform.py     # Cross-platform paths, subprocess, file I/O
+│   │   ├── platform_utils.py  # Cross-platform paths, subprocess, file I/O
 │   │   ├── workspace.py    # Per-game dirs, read-only originals + work copy
 │   │   ├── snapshot.py     # Copy-on-write + undo (SHA-256 verified)
 │   │   ├── job_log.py      # JSONL log → patches + changelog
@@ -224,6 +227,12 @@ PYTHONPATH=src:tests python -m pytest -v
 - **Latest:** [v0.1.0](https://github.com/RivaExits0/forge-mcp/releases/tag/v0.1.0)
 - **Install from release:** `pip install git+https://github.com/RivaExits0/forge-mcp.git@v0.1.0[full]`
 
+### Create Release (run locally)
+```bash
+git tag -a v0.1.0 -m "forge-mcp v0.1.0: Initial release"
+git push origin v0.1.0
+```
+
 ---
 
 ## 🔧 Troubleshooting
@@ -241,7 +250,7 @@ PYTHONPATH=src:tests python -m pytest -v
 
 ## 📄 License
 
-**MIT** — use freely for your own single-player modding.
+**MIT** — use freely for your own single-player modding. See [LICENSE](LICENSE).
 
 ---
 
@@ -252,6 +261,22 @@ PYTHONPATH=src:tests python -m pytest -v
 3. Add tests for new functionality
 4. Ensure `pytest -q` passes
 5. Open a PR
+
+---
+
+## 🎬 Demo (Coming Soon)
+
+See [docs/demo.md](docs/demo.md) for a recorded demo (GIF/video placeholder).
+
+The demo recording script is at [docs/demo-script.md](docs/demo-script.md) — it walks through the Example Workflow step by step with the exact MCP tool calls.
+
+---
+
+## 🔗 Related Projects
+
+- **crash-mcp** — Deep crash dump analysis (ELF core + Windows minidump). Use `diagnose.parse_crash_log` for basic parsing; for full stack traces, thread lists, and disassembly, see [crash-mcp](https://github.com/RivaExits0/crash-mcp).
+- **emu-mcp** — Isolated function emulation with Unicorn. Use `pe.emulate_function` for simple emulation; for full calling convention support, hooks, and tracing, see [emu-mcp](https://github.com/RivaExits0/emu-mcp).
+- **henry-mcp** — Static compatibility analysis for EXE/DLL/APK/Kotlin. Use `henry_inspect_file` and `henry_analyze_pair` for module compatibility checks.
 
 ---
 

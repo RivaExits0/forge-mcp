@@ -22,7 +22,7 @@ import os
 import struct
 from typing import Any, Dict, List, Optional, Tuple
 
-from forge_mcp.core.platform import read_file
+from forge_mcp.core.platform_utils import read_file
 
 
 _TYPE_FMT = {

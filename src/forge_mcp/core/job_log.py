@@ -7,7 +7,7 @@ import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import ensure_dir, read_file, write_file
+from forge_mcp.core.platform_utils import ensure_dir, read_file, write_file
 
 
 def _log_path(ws_dir: str) -> str:

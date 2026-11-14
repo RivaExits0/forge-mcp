@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import Any, Dict, List, Optional
 
-from forge_mcp.core.platform import read_file, write_file, ensure_dir
+from forge_mcp.core.platform_utils import read_file, write_file, ensure_dir
 
 
 def frida_script(target: str, hook: str, output_path: Optional[str] = None) -> Dict[str, Any]:

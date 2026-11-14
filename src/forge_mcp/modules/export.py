@@ -7,7 +7,7 @@ import struct
 from typing import Any, Dict, List, Optional
 
 from forge_mcp.core.external import find_executable, run_tool
-from forge_mcp.core.platform import read_file, write_file, ensure_dir
+from forge_mcp.core.platform_utils import read_file, write_file, ensure_dir
 
 
 def export_patch(original: bytes, modified: bytes, out_path: str, fmt: str = "ips") -> Dict[str, Any]:

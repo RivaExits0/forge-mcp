@@ -1,25 +1,26 @@
-# Elden Ring Game Profile Example
+# Example Game Profile
 
-This is a sample game profile (adapter) for Elden Ring.
-Copy this folder to `profiles/elden_ring/` and load with:
+This is a sample game profile (adapter) for a fictional game.
+Copy this folder to `profiles/example_game/` and load with:
+
 ```python
-open_game({"game_name": "elden_ring", "profile_dir": "profiles/elden_ring"})
+open_game({"game_name": "example_game", "profile_dir": "profiles/example_game"})
 ```
 
 ## profile.toml
 ```toml
-name = "elden_ring"
+name = "example_game"
 version = "1.0"
-author = "forge-mcp community"
-description = "Elden Ring save/table offsets and signatures"
+author = "forge-mcp"
+description = "Example game save/table offsets and signatures"
 
 [files]
 save = "save.bin"
-exe = "eldenring.exe"
+exe = "example.exe"
 
 [offsets]
 gold = 0x3A20
-runes = 0x3A24
+health = 0x3A24
 level = 0x3A28
 
 [tables]
@@ -30,7 +31,7 @@ items = "item_table.bin"
 ```json
 {
   "gold_value": "8B 45 ?? 3D 96 00 00 00 75 ?? 48 8B 0D",
-  "runes_function": "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B F9 8B 59",
+  "health_function": "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B F9 8B 59",
   "item_get": "40 53 48 83 EC 20 48 8B D9 48 8B 0D ?? ?? ?? ?? 48 85 C9"
 }
 ```
@@ -38,7 +39,7 @@ items = "item_table.bin"
 ## schema.ksy (Kaitai Struct for item table)
 ```yaml
 meta:
-  id: elden_ring_item_table
+  id: example_game_item_table
   endian: le
 seq:
   - id: count

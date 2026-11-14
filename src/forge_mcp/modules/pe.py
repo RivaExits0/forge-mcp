@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 import pefile
 
 from forge_mcp.core.external import find_executable, run_tool
-from forge_mcp.core.platform import read_file, ensure_dir, IS_WINDOWS
+from forge_mcp.core.platform_utils import read_file, ensure_dir, IS_WINDOWS
 
 
 def detect_compiler(pe: "pefile.PE", data: bytes, section_names: List[str]) -> List[Dict[str, Any]]:
@@ -292,7 +292,7 @@ public class Decompile extends GhidraScript {{
     }}
 }}
 '''
-    from forge_mcp.core.platform import write_file
+    from forge_mcp.core.platform_utils import write_file
     write_file(script, script_content)
     args = [proj, "forgeproj", "-import", binary, "-postScript", script, "-deleteProject"]
     tr = run_tool("ghidra", args, timeout=timeout, cwd=outdir)

@@ -13,7 +13,7 @@ import subprocess
 from dataclasses import dataclass
 from typing import List, Optional, Sequence
 
-from forge_mcp.core.platform import find_executable, run_cmd, IS_WINDOWS, EXE_EXT
+from forge_mcp.core.platform_utils import find_executable, run_cmd, IS_WINDOWS, EXE_EXT
 
 
 @dataclass
