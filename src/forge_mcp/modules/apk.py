@@ -162,7 +162,10 @@ def smali_search(src_dir: str, query: str, limit: int = 100) -> List[Dict[str, A
 
 
 def smali_patch(src_dir: str, file_rel: str, old: str, new: str, dry_run: bool = True) -> Dict[str, Any]:
-    p = os.path.join(src_dir, file_rel)
+    src_root = os.path.realpath(src_dir)
+    p = os.path.realpath(os.path.join(src_root, file_rel))
+    if p != src_root and not p.startswith(src_root + os.sep):
+        return {"error": "path escapes source directory"}
     if not os.path.isfile(p):
         return {"error": f"file not found: {p}"}
     content = read_file(p)
