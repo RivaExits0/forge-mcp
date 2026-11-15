@@ -27,7 +27,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .[full] || pip install -e .[dev]
+          # Optional integrations are best-effort; tests for them skip when
+          # the extra cannot be built on a runner.
+          pip install -e .[full] || echo "optional full extras unavailable"
+          # Test dependencies must be installed explicitly: the optional
+          # `full` extra does not include pytest, so `.[full]` alone leaves
+          # the test command unavailable.
+          pip install -e .[dev]
 
       - name: Run tests
-        run: pytest -q
+        run: python -m pytest -q

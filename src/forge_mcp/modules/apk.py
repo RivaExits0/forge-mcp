@@ -199,17 +199,22 @@ def resource_extract(apk_path: str, out_dir: str, pattern: Optional[str] = None)
     z = zipfile.ZipFile(apk_path)
     extracted = []
     import fnmatch
-    for info in z.infolist():
-        if pattern and not fnmatch.fnmatch(info.filename, pattern):
-            continue
-        if info.is_dir():
-            continue
-        target = os.path.join(out_dir, info.filename)
-        ensure_dir(os.path.dirname(target))
-        with z.open(info) as src:
-            from forge_mcp.core.platform_utils import write_file
-            write_file(target, src.read(), binary=True)
-        extracted.append(info.filename)
+    with zipfile.ZipFile(apk_path) as z:
+        for info in z.infolist():
+            if pattern and not fnmatch.fnmatch(info.filename, pattern):
+                continue
+            if info.is_dir():
+                continue
+            # Guard against ZIP slip: never write outside out_dir.
+            target = os.path.realpath(os.path.join(out_dir, info.filename))
+            base = os.path.realpath(out_dir)
+            if target != base and not target.startswith(base + os.sep):
+                continue
+            ensure_dir(os.path.dirname(target))
+            with z.open(info) as src:
+                from forge_mcp.core.platform_utils import write_file
+                write_file(target, src.read(), binary=True)
+            extracted.append(info.filename)
     return {"count": len(extracted), "files": extracted[:200]}
 
 
